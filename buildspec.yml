@@ -1,0 +1,19 @@
+version: 0.2
+
+batch:
+  build-fanout:
+    parallelism: 3
+
+phases:
+  install:
+    commands:
+      - echo 'Installing '
+      - pip install -r requirements.txt
+      - python manage.py migrate
+  build:
+    commands:
+      - echo 'Running '
+      - codebuild-tests-run --test-command 'python manage.py test calc.tests  ' --sharding-strategy 'equal-distribution'
+  post_build:
+    commands:
+      - echo "Would deploy here"
